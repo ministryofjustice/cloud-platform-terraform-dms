@@ -6,7 +6,7 @@ In the context of that module, the AWS Database Migration Service is used to mig
 
 **THIS MODULE IS MEANT FOR THE CLOUD-PLATFORM TEAM TO USE**
 
-**NOT COMMIT ANYTHING TO THE ENVIRONMNENT CODEBASE**
+**DO NOT COMMIT ANYTHING TO THE ENVIRONMNENT CODEBASE**
 
 The plan is for this module to be use locally, against a local state, outside of any pipeline.
 The reasons for this are : 
