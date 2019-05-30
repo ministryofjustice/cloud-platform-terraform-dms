@@ -9,7 +9,7 @@ variable target_database_password {}
 variable target_database_host {}
 
 module "example_dms" {
-  source                   = ".."
+  source                   = "https://github.com/ministryofjustice/cloud-platform-terraform-dms?ref=1.0"
   team_name                = "example-team"
   business-unit            = "example-bu"
   application              = "exampleapp"
