@@ -1,4 +1,3 @@
-
 variable "team_name" {}
 
 variable "application" {}
