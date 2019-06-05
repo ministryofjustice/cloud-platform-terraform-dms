@@ -86,7 +86,7 @@ resource "aws_dms_endpoint" "target" {
 }
 
 data "local_file" "replication-tasks-settings" {
-  filename = "${file("${path.module}/resources/settings.tmpl")}"
+  filename = "${path.module}/resources/settings.tmpl"
 }
 
 # Create a new replication task
