@@ -32,7 +32,7 @@ On top of those, this module requires connection information to access the _sour
 
 ```hcl
 module "example_dms" {
-  source                   = "https://github.com/ministryofjustice/cloud-platform-terraform-dms?ref=1.0"
+  source                   = "github.com/ministryofjustice/cloud-platform-terraform-dms?ref=1.1"
   team_name                = "example-team"
   business-unit            = "example-bu"
   application              = "exampleapp"
