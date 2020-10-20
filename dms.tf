@@ -18,6 +18,7 @@ resource "aws_dms_replication_subnet_group" "replication-subnet-group" {
     Description = "Managed by Terraform"
     Env         = "${var.environment-name}"
     Owner       = "${var.team_name}"
+    namespace   = "${var.namespace}"
   }
 }
 
