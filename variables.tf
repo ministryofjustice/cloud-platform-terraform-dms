@@ -9,6 +9,9 @@ variable "business-unit" {
   default     = "mojdigital"
 }
 
+variable "namespace" {
+}
+
 variable "engine_type" {
   description = "Engine used e.g. postgres"
   default     = "postgres"

@@ -14,6 +14,7 @@ module "example_dms" {
   business-unit            = "example-bu"
   application              = "exampleapp"
   environment-name         = "development"
+  namespace                = "${var.namespace}"
   source_database_name     = "${var.source_database_name}"
   source_database_username = "${var.source_database_username}"
   source_database_password = "${var.source_database_password}"
