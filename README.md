@@ -1,5 +1,7 @@
 # AWS DMS Terraform module
 
+**NOTE: This repository is not supported by Clould Platform anymore and it is archived**
+
 This terraform module will create a full DMS stack.
 
 In the context of that module, the AWS Database Migration Service is used to migrate pure data from one RDS to another.
