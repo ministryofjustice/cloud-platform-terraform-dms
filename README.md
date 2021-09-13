@@ -7,7 +7,8 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 ## Pre-requirements
 
  1 - The _source_ database needs to have its _Public Accessibility_ settings turned on (or the equivalent firewall rule in other environments)
- 2 - For Postgrs-to-Postgres, the _source_ RDS's parameter group need to comply with :
+
+ 2 - For Postgres-to-Postgres, the _source_ RDS's parameter group need to comply with :
    - rds.logical_replication = 1
    - max_replication_slots > 5
 
@@ -16,8 +17,8 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 ## Usage
 
 This module follows the MOJ's standard practices for modules. Team, BU, application and environment are passed down to the module.
-On top of those, this module requires connection information to access the _source_ and the _target_ RDS.
 
+The module will not require connection information for the _source_ and the _target_ RDS, those will be defined via the API using the credentials in output.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
