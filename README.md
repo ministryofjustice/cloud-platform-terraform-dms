@@ -1,25 +1,13 @@
 # AWS DMS Terraform module
 
-**NOTE: This repository is not supported by Clould Platform anymore and it is archived**
-
 This terraform module will create a full DMS stack.
 
-In the context of that module, the AWS Database Migration Service is used to migrate pure data from one RDS to another.
-
-**THIS MODULE IS MEANT FOR THE CLOUD-PLATFORM TEAM TO USE**
-
-**DO NOT COMMIT ANYTHING TO THE ENVIRONMNENT CODEBASE**
-
-The plan is for this module to be use locally, against a local state, outside of any pipeline.
-The reasons for this are : 
- - This is a one-off/temporary infrastructure component, that needs to be deleted once it has fulfilled its duty.
- - This module requires database credentials to be passed to it.
- 
+The AWS Database Migration Service is used to migrate data from a database (RDS or external) to an RDS instance in the Cloud platform VPC.
 
 ## Pre-requirements
 
- 1 - The _source_ RDS needs to have its _Public Accessibility_ settings turned on.  
- 2 - The _source_ RDS's parameter group need to comply with :
+ 1 - The _source_ database needs to have its _Public Accessibility_ settings turned on (or the equivalent firewall rule in other environments)
+ 2 - For Postgrs-to-Postgres, the _source_ RDS's parameter group need to comply with :
    - rds.logical_replication = 1
    - max_replication_slots > 5
 
@@ -31,36 +19,60 @@ This module follows the MOJ's standard practices for modules. Team, BU, applicat
 On top of those, this module requires connection information to access the _source_ and the _target_ RDS.
 
 
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-```hcl
-module "example_dms" {
-  source                   = "github.com/ministryofjustice/cloud-platform-terraform-dms?ref=1.1"
-  team_name                = "example-team"
-  business-unit            = "example-bu"
-  application              = "exampleapp"
-  environment-name         = "development"
-  source_database_name     = "${var.source_database_name}"
-  source_database_username = "${var.source_database_username}"
-  source_database_password = "${var.source_database_password}"
-  source_database_host     = "${var.source_database_host}"
-  target_database_name     = "${var.target_database_name}"
-  target_database_username = "${var.target_database_username}"
-  target_database_password = "${var.target_database_password}"
-  target_database_host     = "${var.target_database_host}"
-}
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12 |
 
-```
+## Providers
 
-**MOST OF THOSE VARIABLES NEED TO DEFINED, PLEASE SEE THE EXAMPLE/DMS.TF FOR MORE DETAILS**
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_local"></a> [local](#provider\_local) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
-The _terraform.tfvars_ needs to be updated with the real values.
+## Modules
 
-```
-# Fill in with your own values
-# Obviously don't commit any of that.
+No modules.
 
-source_database_name = "example_db_name"
-source_database_username = "example_db_username"
-source_database_password = "example_db_password"
-source_database_host = "example_rds_endpoint"
-```
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_dms_endpoint.source](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_endpoint) | resource |
+| [aws_dms_endpoint.target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_endpoint) | resource |
+| [aws_dms_replication_instance.replication-instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_replication_instance) | resource |
+| [aws_dms_replication_subnet_group.replication-subnet-group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_replication_subnet_group) | resource |
+| [aws_dms_replication_task.replication-task](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_replication_task) | resource |
+| [random_id.id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
+| [local_file.replication-tasks-settings](https://registry.terraform.io/providers/hashicorp/local/latest/docs/data-sources/file) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_application"></a> [application](#input\_application) | n/a | `any` | n/a | yes |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | Region into which the resource will be created. | `string` | `"eu-west-2"` | no |
+| <a name="input_business-unit"></a> [business-unit](#input\_business-unit) | Area of the MOJ responsible for the service | `string` | `"mojdigital"` | no |
+| <a name="input_engine_type"></a> [engine\_type](#input\_engine\_type) | Engine used e.g. postgres | `string` | `"postgres"` | no |
+| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | The engine version to use e.g. 9.6 | `string` | `"9.6"` | no |
+| <a name="input_environment-name"></a> [environment-name](#input\_environment-name) | n/a | `any` | n/a | yes |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | replication instance size, e.g dms.t2.medium | `string` | `"dms.t2.medium"` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | n/a | `any` | n/a | yes |
+| <a name="input_source_database_host"></a> [source\_database\_host](#input\_source\_database\_host) | host, endpoint of source database (psql -h) | `any` | n/a | yes |
+| <a name="input_source_database_name"></a> [source\_database\_name](#input\_source\_database\_name) | Name of source database (psql -d) | `any` | n/a | yes |
+| <a name="input_source_database_password"></a> [source\_database\_password](#input\_source\_database\_password) | user's password in source database | `any` | n/a | yes |
+| <a name="input_source_database_username"></a> [source\_database\_username](#input\_source\_database\_username) | username in source database (psql -U) | `any` | n/a | yes |
+| <a name="input_target_database_host"></a> [target\_database\_host](#input\_target\_database\_host) | host, endpoint of target database (psql -d) | `any` | n/a | yes |
+| <a name="input_target_database_name"></a> [target\_database\_name](#input\_target\_database\_name) | Name of target database (psql -d) | `any` | n/a | yes |
+| <a name="input_target_database_password"></a> [target\_database\_password](#input\_target\_database\_password) | user's password in target database (psql -d) | `any` | n/a | yes |
+| <a name="input_target_database_username"></a> [target\_database\_username](#input\_target\_database\_username) | username in target database (psql -U) | `any` | n/a | yes |
+| <a name="input_team_name"></a> [team\_name](#input\_team\_name) | n/a | `any` | n/a | yes |
+
+## Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->
