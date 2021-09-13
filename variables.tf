@@ -1,8 +1,11 @@
-variable "team_name" {}
+variable "team_name" {
+}
 
-variable "application" {}
+variable "application" {
+}
 
-variable "environment-name" {}
+variable "environment-name" {
+}
 
 variable "business-unit" {
   description = "Area of the MOJ responsible for the service"
