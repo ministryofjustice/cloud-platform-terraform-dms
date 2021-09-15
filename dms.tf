@@ -47,10 +47,12 @@ resource "aws_dms_replication_instance" "replication-instance" {
   replication_subnet_group_id = aws_dms_replication_subnet_group.replication-subnet-group.id
 
   tags = {
-    Name        = "${var.team_name} Replication Instance"
-    Description = "Managed by Terraform"
-    Env         = var.environment-name
-    Application = var.application
-    Owner       = var.team_name
+    Name             = "${var.team_name} Replication Instance"
+    Description      = "Managed by Terraform"
+    Env              = var.environment-name
+    Application      = var.application
+    Owner            = var.team_name
+    is-production    = var.is-production
+    environment-name = var.environment-name
   }
 }
