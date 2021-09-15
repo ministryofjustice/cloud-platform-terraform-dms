@@ -19,6 +19,10 @@ variable "is-production" {
   default = "false"
 }
 
+variable "infrastructure-support" {
+  description = "The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>)"
+}
+
 variable "namespace" {
 }
 
