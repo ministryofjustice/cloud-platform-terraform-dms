@@ -15,8 +15,6 @@ variable "business-unit" {
   default     = "mojdigital"
 }
 
-variable "environment-name" {}
-
 variable "is-production" {
   default = "false"
 }

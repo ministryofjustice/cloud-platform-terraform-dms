@@ -49,7 +49,6 @@ resource "aws_dms_replication_instance" "replication-instance" {
   tags = {
     Name             = "${var.team_name} Replication Instance"
     Description      = "Managed by Terraform"
-    Env              = var.environment-name
     Application      = var.application
     Owner            = var.team_name
     is-production    = var.is-production
