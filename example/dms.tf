@@ -1,41 +1,26 @@
-variable "source_database_name" {
+
+module "test_dms" {
+  source = "github.com/ministryofjustice/cloud-platform-terraform-dms?ref=new-use"
+
+  cluster_name           = var.cluster_name
+  namespace              = var.namespace
+  application            = var.application
+  business-unit          = var.business_unit
+  environment-name       = var.environment
+  infrastructure-support = var.infrastructure_support
+  is-production          = var.is_production
+  team_name              = var.team_name
 }
 
-variable "source_database_username" {
-}
+resource "kubernetes_secret" "dms_instance" {
+  metadata {
+    name      = "dms-instance"
+    namespace = var.namespace
+  }
 
-variable "source_database_password" {
+  data = {
+    replication_instance_arn = module.test_dms.replication_instance_arn
+    access_key_id            = module.test_dms.access_key_id
+    secret_access_key        = module.test_dms.secret_access_key
+  }
 }
-
-variable "source_database_host" {
-}
-
-variable "target_database_name" {
-}
-
-variable "target_database_username" {
-}
-
-variable "target_database_password" {
-}
-
-variable "target_database_host" {
-}
-
-module "example_dms" {
-  source                   = "github.com/ministryofjustice/cloud-platform-terraform-dms?ref=1.1"
-  team_name                = "example-team"
-  business-unit            = "example-bu"
-  application              = "exampleapp"
-  environment-name         = "development"
-#  namespace                = var.namespace
-  source_database_name     = var.source_database_name
-  source_database_username = var.source_database_username
-  source_database_password = var.source_database_password
-  source_database_host     = var.source_database_host
-  target_database_name     = var.target_database_name
-  target_database_username = var.target_database_username
-  target_database_password = var.target_database_password
-  target_database_host     = var.target_database_host
-}
-
