@@ -56,3 +56,29 @@ resource "aws_dms_replication_instance" "replication-instance" {
     infrastructure-support = var.infrastructure-support
   }
 }
+
+resource "aws_iam_user" "dms_user" {
+  name = "dms-${var.team_name}-${random_id.id.hex}"
+  path = "/system/dms-user/"
+}
+
+resource "aws_iam_access_key" "dms_key" {
+  user = aws_iam_user.dms_user.name
+}
+
+data "aws_iam_policy_document" "dms_policy" {
+  statement {
+    actions = [
+      "dms:*",
+    ]
+    resources = [
+      "${aws_dms_replication_instance.replication-instance.replication_instance_arn}"
+    ]
+  }
+}
+
+resource "aws_iam_user_policy" "policy" {
+  name   = "dms-${var.team_name}-${random_id.id.hex}"
+  policy = data.aws_iam_policy_document.dms_policy.json
+  user   = aws_iam_user.dms_user.name
+}
