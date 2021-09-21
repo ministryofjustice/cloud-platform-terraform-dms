@@ -64,7 +64,9 @@ resource "aws_dms_endpoint" "target" {
   }
 }
 
-# provider bug: if the endpoints are changed, the task must also have a (any) change; otherwise the next "apply" will fail with error "No modifications were requested on the task" 
+# provider bug: if any *other* options change, the task must also have a (any) change; otherwise the next "apply" will fail with error "No modifications were requested on the task" 
+# for a quick workaround, just `aws dms delete-replication-task --replication-task-arn ...` before creating the PR
+# https://github.com/hashicorp/terraform-provider-aws/issues/1513 describes this but the lifecycle workaround is not satisfactory
 
 resource "aws_dms_replication_task" "replication_task" {
   # two values make sense here: full-load or full-load-and-cdc; see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details
