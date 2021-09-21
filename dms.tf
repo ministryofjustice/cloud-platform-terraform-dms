@@ -82,7 +82,7 @@ data "aws_iam_policy_document" "dms_policy" {
   }
   statement {
     actions = [
-      "dms:describe-replication-instances",
+      "dms:DescribeReplicationInstances",
     ]
     resources = [
       "*",
@@ -90,11 +90,16 @@ data "aws_iam_policy_document" "dms_policy" {
   }
   statement {
     actions = [
-      "dms:describe-replication-tasks",
+      "dms:DescribeReplicationTasks",
     ]
     resources = [
       "*",
     ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/Owner"
+      values   = [var.team_name]
+    }
   }
 }
 
