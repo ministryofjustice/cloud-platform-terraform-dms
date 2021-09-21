@@ -14,13 +14,19 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 
  **DMS ONLY MIGRATES DATA, NO PRE-DATA, POST-DATA(CONSTRAINTS), USERS, ROLES, ETC.**
 
+ **Continuous replication, especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
+
  **For schema migration, try https://aws.amazon.com/dms/schema-conversion-tool/**
 
 ## Usage
 
 This module follows the MOJ's standard practices for modules. Team, BU, application and environment are passed down to the module.
 
-The module will not require connection information for the _source_ and the _target_ RDS, those will be defined via the API using the credentials in output.
+The module will not require connection information for the _source_ and the _target_ RDS, those will be defined in the environments repo using a secret that the team must first set in the namespace (see the `dms-secret.yaml` in the example dir for its structure).
+
+Replication task settings are defined in a (lengthy) json file that will be loaded via the DMS API, not via terraform. Two examples of such are in the example/ dir, one for postgres-to-postgres the other for mssql-to-postgres.
+
+Also via API using the output credentials the replication status can be queried and the task paused/resumed.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
