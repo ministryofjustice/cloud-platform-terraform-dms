@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "dms_policy" {
     ]
     condition {
       test = "StringEquals"
-      variable = "Owner"
+      variable = "aws:ResourceTag/Owner"
       values = [
         "${var.team_name}"
       ]

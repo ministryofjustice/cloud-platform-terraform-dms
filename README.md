@@ -33,10 +33,12 @@ Replication task settings are defined in a (lengthy) json file that will be load
 Also via API using the output credentials the replication status can be queried and the task paused/resumed.
 
 ```
-$ aws dms describe-replication-instance-task-logs --replication-instance-arn arn:aws:dms:eu-west-2:754256621582:rep:
+$ aws dms describe-replication-instance-task-logs --replication-instance-arn arn:aws:dms:eu-west-2:11111111:rep:
 ...
-            "ReplicationTaskName": "webops-repl-0c730e0a39acf8c5",
-$ 
+$ aws dms start-replication-task --replication-task-arn arn:aws:dms:eu-west-2:11111111:task: --start-replication-task-type resume-processing
+...
+$ aws dms delete-replication-task --replication-task-arn
+...
 ```
 
 <!-- BEGIN_TF_DOCS -->
