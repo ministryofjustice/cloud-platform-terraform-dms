@@ -72,8 +72,15 @@ data "aws_iam_policy_document" "dms_policy" {
       "dms:*",
     ]
     resources = [
-      "${aws_dms_replication_instance.replication-instance.replication_instance_arn}"
+      "*",
     ]
+    condition {
+      test = "StringEquals"
+      variable = "Owner"
+      values = [
+        "${var.team_name}"
+      ]
+    }
   }
 }
 
