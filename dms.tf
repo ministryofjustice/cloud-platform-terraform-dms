@@ -75,10 +75,26 @@ data "aws_iam_policy_document" "dms_policy" {
       "*",
     ]
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "aws:ResourceTag/Owner"
-      values = [var.team_name]
+      values   = [var.team_name]
     }
+  }
+  statement {
+    actions = [
+      "dms:describe-replication-instances",
+    ]
+    resources = [
+      "*",
+    ]
+  }
+  statement {
+    actions = [
+      "dms:describe-replication-tasks",
+    ]
+    resources = [
+      "*",
+    ]
   }
 }
 
