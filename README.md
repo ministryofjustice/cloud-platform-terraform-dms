@@ -16,6 +16,10 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 
  **Continuous replication, especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
 
+## Schema migration
+
+For a fresh, empty, destination database you will probably be fine with just leaving the `replication_task_settings` setting empty; as noted above though this will only get the data across, with no meta-information like transaction log, user accounts, foreign key constraints, etc.
+
  **For schema migration, try https://aws.amazon.com/dms/schema-conversion-tool/**
 
 ## Usage
