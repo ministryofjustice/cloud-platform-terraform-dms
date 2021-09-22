@@ -16,17 +16,11 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 
  **Continuous replication, especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
 
-## Schema migration
-
-WIP
-
- **For schema migration, try https://aws.amazon.com/dms/schema-conversion-tool/**
-
 ## Usage
 
 For most scenarios, there are only 2 required steps:
 
- 1. Create a secret in your namespace containing the connection details of both source and destination. See the file example/dms-secret.yaml for the structure.
+ 1. Create a kubernetes secret (via `kubectl` or `helm`) in your namespace containing the connection details of both source and destination. See the file example/dms-secret.yaml for the structure.
 
  2. Copy the example/dms.tf file to your namespace/resources dir; while lengthy it should just work unmodified.
 
