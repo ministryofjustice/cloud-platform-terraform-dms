@@ -22,6 +22,8 @@ resource "random_id" "id" {
   byte_length = 8
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_endpoint
+
 resource "aws_dms_endpoint" "source" {
   endpoint_id                 = "${var.team_name}-src-${random_id.id.hex}"
   endpoint_type               = "source"
