@@ -64,10 +64,6 @@ resource "aws_dms_endpoint" "target" {
   }
 }
 
-# provider bug: if any *other* options change, the task must also have a (any) change; otherwise the next "apply" will fail with error "No modifications were requested on the task" 
-# for a quick workaround, just `aws dms delete-replication-task --replication-task-arn ...` before creating the PR
-# https://github.com/hashicorp/terraform-provider-aws/issues/1513 describes this but the lifecycle workaround is not satisfactory
-
 resource "aws_dms_replication_task" "replication_task" {
   # two values make sense here: full-load or full-load-and-cdc; see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details
   # most notably, Azure SQL does not support CDC
@@ -80,6 +76,8 @@ resource "aws_dms_replication_task" "replication_task" {
 
   table_mappings            = "{\"rules\":[{\"rule-type\":\"selection\",\"rule-id\":\"1\",\"rule-name\":\"1\",\"object-locator\":{\"schema-name\":\"%\",\"table-name\":\"%\"},\"rule-action\":\"include\"}]}"
   replication_task_settings = ""
+
+  lifecycle { ignore_changes = ["replication_task_settings"] }
 
   tags = {
     Name        = "${var.team_name} Replication Task"
