@@ -66,6 +66,9 @@ resource "aws_iam_access_key" "dms_key" {
   user = aws_iam_user.dms_user.name
 }
 
+# as per https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsdatabasemigrationservice.html
+# the only way to filter DMS actions is by checking resource tags (users can edit only resources that have the tag 'Owner' set to their team)
+
 data "aws_iam_policy_document" "dms_policy" {
   statement {
     actions = [
