@@ -22,15 +22,15 @@ For most scenarios, there are only 2 required steps:
 
  1. Create a kubernetes secret (via `kubectl` or `helm`) in your namespace containing the connection details of both source and destination. See the file example/dms-secret.yaml for the structure.
 
-   * DMS requires username+password authentication, other auth methods are not supported yet
+     * DMS requires username+password authentication, other auth methods are not supported yet
 
-   * Source and destination in the secret are hostnames or IPs
+     * Source and destination in the secret are hostnames or IPs
 
-   * TCP ports are usually 1433 for SQLServer, 5432 for Postgres, 3306 for MySQL etc
+     * TCP ports are usually 1433 for SQLServer, 5432 for Postgres, 3306 for MySQL etc
 
-   * SSL mode has to be one of [none require verify-ca verify-full] see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_endpoint
+     * SSL mode has to be one of [none require verify-ca verify-full] see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dms_endpoint
 
-   * The list of engine names is in the same doc, some are quite exotic, the most used ones will probably be [mysql postgres sqlserver]
+     * The list of engine names is in the same doc, some are quite exotic, the most used ones will probably be [mysql postgres sqlserver]
 
  2. Copy the example/dms.tf file to your namespace/resources dir; while lengthy it should just work unmodified.
 
