@@ -14,7 +14,7 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 
  **DMS ONLY MIGRATES DATA, NO PRE-DATA, POST-DATA(CONSTRAINTS), USERS, ROLES, ETC.**
 
- **Continuous replication, especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
+ **Continuous replication (referred to as CDC in DMS docs), especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
 
 ## Usage
 
@@ -44,7 +44,6 @@ $ aws dms start-replication-task --replication-task-arn arn:aws:dms:eu-west-2:11
 $ aws dms delete-replication-task --replication-task-arn
 ...
 ```
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -89,7 +88,7 @@ No modules.
 | <a name="input_business-unit"></a> [business-unit](#input\_business-unit) | Area of the MOJ responsible for the service | `string` | `"mojdigital"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `any` | n/a | yes |
 | <a name="input_environment-name"></a> [environment-name](#input\_environment-name) | n/a | `any` | n/a | yes |
-| <a name="input_infrastructure-support"></a> [infrastructure-support](#input\_infrastructure-support) | The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>) | `any` | n/a | yes |
+| <a name="input_infrastructure-support"></a> [infrastructure-support](#input\_infrastructure-support) | The team responsible for managing the infrastructure. Should be of the form team-name (team-email) | `any` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | replication instance size, e.g dms.t2.medium | `string` | `"dms.t2.medium"` | no |
 | <a name="input_is-production"></a> [is-production](#input\_is-production) | n/a | `string` | `"false"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | n/a | `any` | n/a | yes |
