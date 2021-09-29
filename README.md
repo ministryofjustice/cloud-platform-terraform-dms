@@ -73,7 +73,9 @@ Several such tools are available (a complete scenario using Postgresql is descri
 
 The following example will use the AWS Schema Conversion Tool (SCT), because it is freely available and supports several engines.
 
-There is no MacOS app available and it is a graphical app that requires a complicated setup using XQuartz and tricking Mesa, but in batch mode we can use a Docker image based on Ubuntu:
+There is no MacOS app available and it is a graphical app that requires a complicated setup using XQuartz and tricking Mesa.
+
+In batch mode we can use a Docker image based on Ubuntu:
 
  1. Download the binary (a ~1GB file) from https://s3.amazonaws.com/publicsctdownload/Ubuntu/aws-schema-conversion-tool-1.0.latest.zip
 
@@ -82,14 +84,13 @@ There is no MacOS app available and it is a graphical app that requires a compli
  3. Build the image
 
 ```
-FROM ubuntu
-COPY aws-schema-conversion-tool-1.0.654.deb /tmp/
-COPY sqljdbc_6.0.8112.200_enu.tar.gz /tmp/
+FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y libx11-6 xdg-utils libxext6 less net-tools
-RUN apt-get install -y libpostgresql-jdbc-java libmariadb-java
+RUN apt-get update && apt-get install -y libx11-6 xdg-utils libxext6 less joe net-tools libgl1-mesa-glx mesa-utils libxslt1.1 libgtk2.0-0
 RUN mkdir -p /usr/share/applications && mkdir -p /usr/share/desktop-directories
-RUN dpkg -i /tmp/aws-schema-conversion-tool-1.0.654.deb
+COPY aws-schema-conversion-tool-1.0.644.deb /tmp/
+RUN dpkg -i /tmp/aws-schema-conversion-tool-1.0.644.deb
+COPY sqljdbc_6.0.8112.200_enu.tar.gz /tmp/
 RUN mkdir -p /usr/local/jdbc-drivers
 RUN cd /usr/local/jdbc-drivers && tar xzvf /tmp/sqljdbc_6.0.8112.200_enu.tar.gz
 RUN rm -f /tmp/*deb /tmp/*gz  && apt-get clean
@@ -99,17 +100,25 @@ ENTRYPOINT ["/opt/aws-schema-conversion-tool/lib/runtime/bin/java","-jar","/opt/
 4. Run with `docker build -t dms-sct .` and 
 
 ```
-$ docker run -ti dms-sct
-2021-09-29 10:20:20.418 [   1]     GENERAL DEBUG   Defining the default application path.
-2021-09-29 10:20:21.128 [   1]     GENERAL DEBUG   doc=[#document: null]
-2021-09-29 10:20:21.199 [   1]     GENERAL INFO    default_project_settings saved.
-2021-09-29 10:20:21.416 [   1]     GENERAL DEBUG   doc=[#document: null]
-2021-09-29 10:20:21.420 [   1]     GENERAL INFO    global_settings saved.
-2021-09-29 10:20:21.440 [   1]     GENERAL ERROR   Unknown command pattern: []
-2021-09-29 10:20:21.441 [   1]     GENERAL MANDATORY Log session finished.
+2021-09-29 17:57:13.861 [   1]     GENERAL DEBUG   Defining the default application path.
+2021-09-29 17:57:14.532 [   1]     GENERAL DEBUG   doc=[#document: null]
+2021-09-29 17:57:14.599 [   1]     GENERAL INFO    default_project_settings saved.
+2021-09-29 17:57:14.816 [   1]     GENERAL DEBUG   doc=[#document: null]
+2021-09-29 17:57:14.821 [   1]     GENERAL INFO    global_settings saved.
+2021-09-29 17:57:14.845 [   1]     GENERAL ERROR   Incorrect options!
+2021-09-29 17:57:14.845 [   1]     GENERAL INFO    Usage:AmazonMigrationToolConsole.exe create | execute batch_file_path [project_dir_path]
+2021-09-29 17:57:14.845 [   1]     GENERAL MANDATORY Log session finished.
 ```
 
-Config file for the batch command is not generic and outside the scope of this module, this example for Oracle-to-Postgresql describes the general steps: https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/incrementally-migrate-from-amazon-rds-for-oracle-to-amazon-rds-for-postgresql-using-oracle-sql-developer-and-aws-sct.html
+Config file for the batch command is not generic and outside the scope of this module, this example for Oracle-to-Postgresql describes the general steps: https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/incrementally-migrate-from-amazon-rds-for-oracle-to-amazon-rds-for-postgresql-using-oracle-sql-developer-and-aws-sct.html; particularly the `run_aws_sct_sql.py` script from that page might be useful.
+
+To run the graphical app on MacOS, setting "Allow connections from network clients" in XQuartz setting and executing
+
+```
+docker run -ti -e LIBGL_ALWAYS_INDIRECT=y -e DISPLAY=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}'):0 -e XAUTHORITY=/.Xauthority -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.Xauthority:/.Xauthority --entrypoint /opt/aws-schema-conversion-tool/bin/AWSSchemaConversionTool dms-sct
+```
+
+*should* do the trick
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
