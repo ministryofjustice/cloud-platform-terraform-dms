@@ -73,7 +73,7 @@ Several such tools are available (a complete scenario using Postgresql is descri
 
 The following example will use the AWS Schema Conversion Tool (SCT), because it is freely available and supports several engines.
 
-There is no MacOS app available and it is a graphical app that requires a complicated setup using XQuartz and trickilg Mesa, but in batch mode we can use a Docker image based on Ubuntu:
+There is no MacOS app available and it is a graphical app that requires a complicated setup using XQuartz and tricking Mesa, but in batch mode we can use a Docker image based on Ubuntu:
 
  1. Download the binary (a ~1GB file) from https://s3.amazonaws.com/publicsctdownload/Ubuntu/aws-schema-conversion-tool-1.0.latest.zip
 
