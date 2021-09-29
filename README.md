@@ -87,7 +87,7 @@ In batch mode we can use a Docker image based on Ubuntu:
 FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y libx11-6 xdg-utils libxext6 less joe net-tools libgl1-mesa-glx mesa-utils libxslt1.1 libgtk2.0-0
-RUN mkdir -p /usr/share/applications && mkdir -p /usr/share/desktop-directories
+RUN mkdir -p /usr/share/applications && mkdir -p /usr/share/desktop-directories && mkdir -p /root/.local/share/
 COPY aws-schema-conversion-tool-1.0.644.deb /tmp/
 RUN dpkg -i /tmp/aws-schema-conversion-tool-1.0.644.deb
 COPY sqljdbc_6.0.8112.200_enu.tar.gz /tmp/
@@ -118,7 +118,9 @@ To run the graphical app on MacOS, setting "Allow connections from network clien
 docker run -ti -e LIBGL_ALWAYS_INDIRECT=y -e DISPLAY=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}'):0 -e XAUTHORITY=/.Xauthority -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.Xauthority:/.Xauthority --entrypoint /opt/aws-schema-conversion-tool/bin/AWSSchemaConversionTool dms-sct
 ```
 
-*should* do the trick
+*should* do the trick and you will see the wizard:
+
+![SCT screenshot](sct-644.png)
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
