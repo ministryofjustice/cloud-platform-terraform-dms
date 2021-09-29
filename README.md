@@ -6,16 +6,16 @@ The AWS Database Migration Service is used to migrate data from a database (RDS 
 
 ## Pre-requirements
 
- 1 - The _source_ database needs to have its _Public Accessibility_ settings turned on (or the equivalent firewall rule in other environments)
+The DMS instance runs behind a NAT, so the _source_ database needs to have its _Public Accessibility_ settings turned on (or the equivalent firewall rule in other environments). Cloud Platform outgoing IPs are published in https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/ip-filtering.html#nat-gateways
 
- 2 - For Postgres in RDS, the _source's_ parameter group need to comply with :
-   - rds.logical_replication = 1
-   - max_replication_slots > 5
+**DMS ONLY MIGRATES DATA, NO PRE-DATA, POST-DATA(CONSTRAINTS), USERS, ROLES, ETC.**
 
- **DMS ONLY MIGRATES DATA, NO PRE-DATA, POST-DATA(CONSTRAINTS), USERS, ROLES, ETC.**
+A couple options to also copy DB schema are described further in this document.
 
- **Continuous replication (referred to as CDC in DMS docs), especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
+**Continuous replication (referred to as CDC in DMS docs), especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
 
+Particularly for MS-SQL, Azure databases are not supported and RDS as source needs the settings described in https://aws.amazon.com/premiumsupport/knowledge-center/dms-migrate-rds-sqlserver/
+ 
 ## Usage
 
 For most scenarios, there are only 2 required steps:
@@ -54,6 +54,63 @@ $ aws dms start-replication-task --replication-task-arn arn:aws:dms:eu-west-2:11
 $ aws dms delete-replication-task --replication-task-arn
 ...
 ```
+
+## Engine-specific caveats
+
+ 1 - For Postgres in RDS, the _source's_ parameter group need to comply with :
+   - rds.logical_replication = 1
+   - max_replication_slots > 5
+
+ 2 - Azure SQL support is not on par with the SQL Server, significant limitations noticed as of version 3.4.5 of DMS are:
+   - AWS DMS doesn't support change data capture operations (CDC) with Azure SQL Database.
+   - ValidationSettings are not supported for 'azuredb' endpoint
+
+## Schema migration
+
+This is a one-off step, probably best done post data migration, because the DMS does not ensure a specific order for inserts so foreign key contraints might fail the copy.
+
+Several such tools are available (a complete scenario using Postgresql is described in https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/aws-rds-migration.html#migrating-an-rds-instance).
+
+The following example will use the AWS Schema Conversion Tool (SCT), because it is freely available and supports several engines.
+
+There is no MacOS app available and it is a graphical app that requires a complicated setup using XQuartz and trickilg Mesa, but in batch mode we can use a Docker image based on Ubuntu:
+
+ 1. Download the binary (a ~1GB file) from https://s3.amazonaws.com/publicsctdownload/Ubuntu/aws-schema-conversion-tool-1.0.latest.zip
+
+ 2. Download the MS-SQL JDBC from https://docs.microsoft.com/en-us/sql/connect/jdbc/microsoft-jdbc-driver-for-sql-server
+
+ 3. Build the image
+
+```
+FROM ubuntu
+COPY aws-schema-conversion-tool-1.0.654.deb /tmp/
+COPY sqljdbc_6.0.8112.200_enu.tar.gz /tmp/
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y libx11-6 xdg-utils libxext6 less net-tools
+RUN apt-get install -y libpostgresql-jdbc-java libmariadb-java
+RUN mkdir -p /usr/share/applications && mkdir -p /usr/share/desktop-directories
+RUN dpkg -i /tmp/aws-schema-conversion-tool-1.0.654.deb
+RUN mkdir -p /usr/local/jdbc-drivers
+RUN cd /usr/local/jdbc-drivers && tar xzvf /tmp/sqljdbc_6.0.8112.200_enu.tar.gz
+RUN rm -f /tmp/*deb /tmp/*gz  && apt-get clean
+ENTRYPOINT ["/opt/aws-schema-conversion-tool/lib/runtime/bin/java","-jar","/opt/aws-schema-conversion-tool/lib/app/AWSSchemaConversionToolBatch.jar"]
+```
+
+4. Run with `docker build -t dms-sct .` and 
+
+```
+$ docker run -ti dms-sct
+2021-09-29 10:20:20.418 [   1]     GENERAL DEBUG   Defining the default application path.
+2021-09-29 10:20:21.128 [   1]     GENERAL DEBUG   doc=[#document: null]
+2021-09-29 10:20:21.199 [   1]     GENERAL INFO    default_project_settings saved.
+2021-09-29 10:20:21.416 [   1]     GENERAL DEBUG   doc=[#document: null]
+2021-09-29 10:20:21.420 [   1]     GENERAL INFO    global_settings saved.
+2021-09-29 10:20:21.440 [   1]     GENERAL ERROR   Unknown command pattern: []
+2021-09-29 10:20:21.441 [   1]     GENERAL MANDATORY Log session finished.
+```
+
+Config file for the batch command is not generic and outside the scope of this module, this example for Oracle-to-Postgresql describes the general steps: https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/incrementally-migrate-from-amazon-rds-for-oracle-to-amazon-rds-for-postgresql-using-oracle-sql-developer-and-aws-sct.html
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
