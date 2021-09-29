@@ -77,7 +77,7 @@ There is no MacOS app available and it is a graphical app that requires a compli
 
 In batch mode we can use a Docker image based on Ubuntu:
 
- 1. Download the binary (a ~1GB file) from https://s3.amazonaws.com/publicsctdownload/Ubuntu/aws-schema-conversion-tool-1.0.latest.zip
+ 1. Download the binary (a ~1GB file) from https://d211wdu1froga6.cloudfront.net/builds/1.0/644/Ubuntu/aws-schema-conversion-tool-1.0.zip (latest release 654 didn't work for this test, YMMV)
 
  2. Download the MS-SQL JDBC from https://docs.microsoft.com/en-us/sql/connect/jdbc/microsoft-jdbc-driver-for-sql-server
 
