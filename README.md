@@ -58,7 +58,7 @@ $ aws dms delete-replication-task --replication-task-arn
 
  1 - a limitation in the provider (as of `hashicorp/aws v3.68.0`) means a change in the migration task settings (`table_mappings` or `replication_task_settings`) without any other changes fails the apply with the unintuitive error "InvalidParameterCombinationException: No modifications were requested on the task". To workaround, also change any other setting around eg a tag.
 
- 2 - task settings are quite verbose and not available as a terraform object, defaults can be seen int he output of `describe-replication-task` and after making any needed edits set with eg `table_mappings = trimspace(file("settings/dms_table_mappings.json"))`; same for `replication_task_settings`
+ 2 - task settings are quite verbose and not available as a terraform object, defaults can be seen in the output of `describe-replication-task` and after making any needed edits set with eg `table_mappings = trimspace(file("settings/dms_table_mappings.json"))`; same for `replication_task_settings`
  
 ## Engine-specific caveats
 
