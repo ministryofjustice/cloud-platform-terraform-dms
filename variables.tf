@@ -1,4 +1,4 @@
-variable "cluster_name" {
+variable "vpc_name" {
 }
 
 variable "team_name" {
