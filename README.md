@@ -169,7 +169,7 @@ No modules.
 | <a name="input_application"></a> [application](#input\_application) | n/a | `any` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | Region into which the resource will be created. | `string` | `"eu-west-2"` | no |
 | <a name="input_business-unit"></a> [business-unit](#input\_business-unit) | Area of the MOJ responsible for the service | `string` | `"mojdigital"` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `any` | n/a | yes |
+| <a name="input_vpc_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `any` | n/a | yes |
 | <a name="input_environment-name"></a> [environment-name](#input\_environment-name) | n/a | `any` | n/a | yes |
 | <a name="input_infrastructure-support"></a> [infrastructure-support](#input\_infrastructure-support) | The team responsible for managing the infrastructure. Should be of the form team-name (team-email) | `any` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | replication instance size, e.g dms.t2.medium | `string` | `"dms.t2.medium"` | no |
