@@ -8,8 +8,11 @@ data "aws_vpc" "selected" {
   }
 }
 
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.selected.id
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.selected.id]
+  }
 
   tags = {
     SubnetType = "Private"
@@ -24,7 +27,7 @@ resource "random_id" "id" {
 resource "aws_dms_replication_subnet_group" "replication-subnet-group" {
   replication_subnet_group_description = "Replication subnet group for ${var.application}"
   replication_subnet_group_id          = "${var.team_name}-sg-${random_id.id.hex}"
-  subnet_ids                           = data.aws_subnet_ids.private.ids
+  subnet_ids                           = data.aws_subnets.private.ids
 
   tags = {
     Name        = "${var.team_name} DMS subnet group"
