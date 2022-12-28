@@ -4,20 +4,20 @@ on:
 
 jobs:
   go-tests:
-    name: Run Terratest Unit Tests
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 0.14.x
           terraform_wrapper: false
 
-      - name: Run tf Tests
-        working-directory: example
+      - name: Run terraform Tests
+        working-directory: examples/
         run: |
           terraform init
           terraform validate
