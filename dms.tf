@@ -65,7 +65,7 @@ resource "aws_iam_user" "dms_user" {
   path = "/system/dms-user/"
 }
 
-resource "aws_iam_access_key" "dms_key" {
+resource "aws_iam_access_key" "dms_key_2023" {
   user = aws_iam_user.dms_user.name
 }
 
