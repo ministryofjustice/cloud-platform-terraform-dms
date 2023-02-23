@@ -132,7 +132,7 @@ docker run -ti -e LIBGL_ALWAYS_INDIRECT=y -e DISPLAY=$(ifconfig en0 | grep inet 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.5 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.27.0 |
 
 ## Providers
