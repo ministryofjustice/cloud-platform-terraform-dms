@@ -1,5 +1,17 @@
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
+locals {
+  default_tags = {
+    # Mandatory
+    business-unit = var.business-unit
+    application   = var.application
+    is-production = var.is-production
+    Owner         = var.team_name # this is capitalised due to the IAM policy used on line 79
+    namespace     = var.namespace # for billing and identification purposes
+
+    # Optional
+    environment-name       = var.environment-name
+    infrastructure-support = var.infrastructure-support
+  }
+}
 
 data "aws_vpc" "selected" {
   filter {
@@ -29,13 +41,10 @@ resource "aws_dms_replication_subnet_group" "replication-subnet-group" {
   replication_subnet_group_id          = "${var.team_name}-sg-${random_id.id.hex}"
   subnet_ids                           = data.aws_subnets.private.ids
 
-  tags = {
+  tags = merge(local.default_tags, {
     Name        = "${var.team_name} DMS subnet group"
     Description = "Managed by Terraform"
-    Env         = var.environment-name
-    Owner       = var.team_name
-    namespace   = var.namespace
-  }
+  })
 }
 
 # Create a new replication instance
@@ -45,24 +54,21 @@ resource "aws_dms_replication_instance" "replication-instance" {
   auto_minor_version_upgrade  = false
   engine_version              = "3.4.5"
   publicly_accessible         = false
-  replication_instance_class  = "dms.t2.medium"
+  replication_instance_class  = var.instance_type
   replication_instance_id     = "${var.team_name}-dms-${random_id.id.hex}"
   replication_subnet_group_id = aws_dms_replication_subnet_group.replication-subnet-group.id
 
-  tags = {
-    Name                   = "${var.team_name} Replication Instance"
-    Description            = "Managed by Terraform"
-    Application            = var.application
-    Owner                  = var.team_name
-    is-production          = var.is-production
-    environment-name       = var.environment-name
-    infrastructure-support = var.infrastructure-support
-  }
+  tags = merge(local.default_tags, {
+    Name        = "${var.team_name} Replication Instance"
+    Description = "Managed by Terraform"
+  })
 }
 
 resource "aws_iam_user" "dms_user" {
   name = "dms-${var.team_name}-${random_id.id.hex}"
   path = "/system/dms-user/"
+
+  tags = local.default_tags
 }
 
 resource "aws_iam_access_key" "dms_key" {
