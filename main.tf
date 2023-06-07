@@ -64,6 +64,7 @@ resource "aws_dms_replication_instance" "replication-instance" {
   })
 }
 
+# Legacy long-lived credentials
 resource "aws_iam_user" "dms_user" {
   name = "dms-${var.team_name}-${random_id.id.hex}"
   path = "/system/dms-user/"
@@ -114,4 +115,46 @@ resource "aws_iam_user_policy" "policy" {
   name   = "dms-${var.team_name}-${random_id.id.hex}"
   policy = data.aws_iam_policy_document.dms_policy.json
   user   = aws_iam_user.dms_user.name
+}
+
+# Short-lived credentials (IRSA)
+data "aws_iam_policy_document" "irsa" {
+  version = "2012-10-17"
+
+  statement {
+    actions = [
+      "dms:*",
+    ]
+    resources = [
+      "*",
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:ResourceTag/Owner"
+      values   = [var.team_name]
+    }
+  }
+  statement {
+    actions = [
+      "dms:DescribeReplicationInstances",
+    ]
+    resources = [
+      "*",
+    ]
+  }
+  statement {
+    actions = [
+      "dms:DescribeReplicationTasks",
+    ]
+    resources = [
+      "*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "irsa" {
+  name   = "cloud-platform-dms-${random_id.id.hex}"
+  path   = "/cloud-platform/dms/"
+  policy = data.aws_iam_policy_document.irsa.json
+  tags   = local.default_tags
 }
