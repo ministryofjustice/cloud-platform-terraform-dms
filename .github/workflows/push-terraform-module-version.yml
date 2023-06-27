@@ -10,7 +10,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ministryofjustice/cloud-platform-environments/cmd/push-terraform-module-version@main
         env:
+          # see https://github.com/ministryofjustice/cloud-platform-go-get-module/
+          # get the address from the ingress eg. 'https://' + `kubectl get ing -n cloud-platform-go-get-module-$ENV`
           API_URL: ${{ vars.TERRAFORM_MODULE_VERSIONS_API_URL }}
+          # get this via the cli eg. `cloud-platform decode-secret -n cloud-platform-go-get-module-prod -s go-get-module-api-key`
           API_KEY: ${{ secrets.TERRAFORM_MODULE_VERSIONS_API_KEY }}
           REPO_NAME: ${{ github.event.repository.name }}
           UPDATED_MODULE_VERSION: ${{ github.ref_name }}
