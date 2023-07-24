@@ -15,7 +15,7 @@ A couple options to also copy DB schema are described further in this document.
 **Continuous replication (referred to as CDC in DMS docs), especially between different engines, is a tricky business, see https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Task.CDC.html for details**
 
 Particularly for MS-SQL, Azure databases are not supported and RDS as source needs the settings described in https://aws.amazon.com/premiumsupport/knowledge-center/dms-migrate-rds-sqlserver/
- 
+
 ## Usage
 
 For most scenarios, there are only 2 required steps:
@@ -59,7 +59,7 @@ $ aws dms delete-replication-task --replication-task-arn
  1 - a limitation in the provider (as of `hashicorp/aws v3.68.0`) means a change in the migration task settings (`table_mappings` or `replication_task_settings`) without any other changes fails the apply with the unintuitive error "InvalidParameterCombinationException: No modifications were requested on the task". To workaround, also change any other setting around eg a tag.
 
  2 - task settings are quite verbose and not available as a terraform object, defaults can be seen in the output of `describe-replication-task` and after making any needed edits set with eg `table_mappings = trimspace(file("settings/dms_table_mappings.json"))`; same for `replication_task_settings`
- 
+
 ## Engine-specific caveats
 
  1 - For Postgres in RDS, the _source's_ parameter group need to comply with :
@@ -102,7 +102,7 @@ RUN rm -f /tmp/*deb /tmp/*gz  && apt-get clean
 ENTRYPOINT ["/opt/aws-schema-conversion-tool/lib/runtime/bin/java","-jar","/opt/aws-schema-conversion-tool/lib/app/AWSSchemaConversionToolBatch.jar"]
 ```
 
-4. Run with `docker build -t dms-sct .` and 
+4. Run with `docker build -t dms-sct .` and
 
 ```
 2021-09-29 17:57:13.861 [   1]     GENERAL DEBUG   Defining the default application path.
