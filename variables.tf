@@ -1,40 +1,8 @@
+#################
+# Configuration #
+#################
 variable "vpc_name" {
   description = "VPC name to create security groups in for the ElastiCache and RDS modules"
-  type        = string
-}
-
-variable "team_name" {
-  description = "Name of the development team responsible for this service"
-  type        = string
-}
-
-variable "application" {
-  description = "Name of the application you are deploying"
-  type        = string
-}
-
-variable "environment-name" {
-  description = "Name of the environment type for this service"
-  type        = string
-}
-
-variable "business-unit" {
-  description = "Area of the MOJ responsible for this service"
-  type        = string
-}
-
-variable "is-production" {
-  description = "Whether this environment type is production or not"
-  type        = string
-}
-
-variable "infrastructure-support" {
-  description = "Email address of the team responsible this service"
-  type        = string
-}
-
-variable "namespace" {
-  description = "Name of the namespace these resources are part of"
   type        = string
 }
 
@@ -48,4 +16,42 @@ variable "allocated_storage" {
   description = "how many GB for local buffer"
   default     = 32
   type        = number
+}
+
+########
+# Tags #
+########
+variable "business_unit" {
+  description = "Area of the MOJ responsible for the service"
+  type        = string
+}
+
+variable "application" {
+  description = "Application name"
+  type        = string
+}
+
+variable "is_production" {
+  description = "Whether this is used for production or not"
+  type        = string
+}
+
+variable "team_name" {
+  description = "Team name"
+  type        = string
+}
+
+variable "namespace" {
+  description = "Namespace name"
+  type        = string
+}
+
+variable "environment_name" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "infrastructure_support" {
+  description = "The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>)"
+  type        = string
 }

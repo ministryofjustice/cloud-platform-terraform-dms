@@ -3,18 +3,7 @@ output "replication_instance_arn" {
   value       = aws_dms_replication_instance.replication-instance.replication_instance_arn
 }
 
-output "access_key_id" {
-  description = "Access key ID for the credentials"
-  value       = aws_iam_access_key.dms_key.id
-  sensitive   = true
-}
-
-output "secret_access_key" {
-  description = "Secret for the credentials"
-  value       = aws_iam_access_key.dms_key.secret
-  sensitive   = true
-}
-
 output "irsa_policy_arn" {
-  value = aws_iam_policy.irsa.arn
+  description = "IAM policy ARN for access to the DMS replication instance"
+  value       = aws_iam_policy.irsa.arn
 }

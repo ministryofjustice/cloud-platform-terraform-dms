@@ -1,15 +1,15 @@
 locals {
   default_tags = {
     # Mandatory
-    business-unit = var.business-unit
+    business-unit = var.business_unit
     application   = var.application
-    is-production = var.is-production
+    is-production = var.is_production
     Owner         = var.team_name # this is capitalised due to the IAM policy used on line 79
     namespace     = var.namespace # for billing and identification purposes
 
     # Optional
-    environment-name       = var.environment-name
-    infrastructure-support = var.infrastructure-support
+    environment-name       = var.environment_name
+    infrastructure-support = var.infrastructure_support
   }
 }
 
@@ -64,64 +64,15 @@ resource "aws_dms_replication_instance" "replication-instance" {
   })
 }
 
-# Legacy long-lived credentials
-resource "aws_iam_user" "dms_user" {
-  name = "dms-${var.team_name}-${random_id.id.hex}"
-  path = "/system/dms-user/"
-
-  tags = local.default_tags
-}
-
-resource "aws_iam_access_key" "dms_key" {
-  user = aws_iam_user.dms_user.name
-}
-
+# Short-lived credentials (IRSA)
 # as per https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsdatabasemigrationservice.html
 # the only way to filter DMS actions is by checking resource tags (users can edit only resources that have the tag 'Owner' set to their team)
-
-data "aws_iam_policy_document" "dms_policy" {
-  statement {
-    actions = [
-      "dms:*",
-    ]
-    resources = [
-      "*",
-    ]
-    condition {
-      test     = "StringEquals"
-      variable = "aws:ResourceTag/Owner"
-      values   = [var.team_name]
-    }
-  }
-  statement {
-    actions = [
-      "dms:DescribeReplicationInstances",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-  statement {
-    actions = [
-      "dms:DescribeReplicationTasks",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-}
-
-resource "aws_iam_user_policy" "policy" {
-  name   = "dms-${var.team_name}-${random_id.id.hex}"
-  policy = data.aws_iam_policy_document.dms_policy.json
-  user   = aws_iam_user.dms_user.name
-}
-
-# Short-lived credentials (IRSA)
 data "aws_iam_policy_document" "irsa" {
   version = "2012-10-17"
 
   statement {
+    effect = "Allow"
+    sid    = "AllowOwnDMSFor${random_id.id.hex}"
     actions = [
       "dms:*",
     ]
@@ -135,15 +86,10 @@ data "aws_iam_policy_document" "irsa" {
     }
   }
   statement {
+    effect = "Allow"
+    sid    = "AllowDescribeFor${random_id.id.hex}"
     actions = [
       "dms:DescribeReplicationInstances",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-  statement {
-    actions = [
       "dms:DescribeReplicationTasks",
     ]
     resources = [
