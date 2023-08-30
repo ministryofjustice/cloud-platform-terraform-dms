@@ -122,6 +122,8 @@ data "aws_iam_policy_document" "irsa" {
   version = "2012-10-17"
 
   statement {
+    effect = "Allow"
+    sid    = "AllowOwnDMSFor${random_id.id.hex}"
     actions = [
       "dms:*",
     ]
@@ -135,15 +137,10 @@ data "aws_iam_policy_document" "irsa" {
     }
   }
   statement {
+    effect = "Allow"
+    sid    = "AllowDescribeFor${random_id.id.hex}"
     actions = [
       "dms:DescribeReplicationInstances",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-  statement {
-    actions = [
       "dms:DescribeReplicationTasks",
     ]
     resources = [
