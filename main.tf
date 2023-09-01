@@ -64,60 +64,9 @@ resource "aws_dms_replication_instance" "replication-instance" {
   })
 }
 
-# Legacy long-lived credentials
-resource "aws_iam_user" "dms_user" {
-  name = "dms-${var.team_name}-${random_id.id.hex}"
-  path = "/system/dms-user/"
-
-  tags = local.default_tags
-}
-
-resource "aws_iam_access_key" "dms_key" {
-  user = aws_iam_user.dms_user.name
-}
-
+# Short-lived credentials (IRSA)
 # as per https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsdatabasemigrationservice.html
 # the only way to filter DMS actions is by checking resource tags (users can edit only resources that have the tag 'Owner' set to their team)
-
-data "aws_iam_policy_document" "dms_policy" {
-  statement {
-    actions = [
-      "dms:*",
-    ]
-    resources = [
-      "*",
-    ]
-    condition {
-      test     = "StringEquals"
-      variable = "aws:ResourceTag/Owner"
-      values   = [var.team_name]
-    }
-  }
-  statement {
-    actions = [
-      "dms:DescribeReplicationInstances",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-  statement {
-    actions = [
-      "dms:DescribeReplicationTasks",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-}
-
-resource "aws_iam_user_policy" "policy" {
-  name   = "dms-${var.team_name}-${random_id.id.hex}"
-  policy = data.aws_iam_policy_document.dms_policy.json
-  user   = aws_iam_user.dms_user.name
-}
-
-# Short-lived credentials (IRSA)
 data "aws_iam_policy_document" "irsa" {
   version = "2012-10-17"
 

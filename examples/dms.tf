@@ -99,8 +99,6 @@ resource "kubernetes_secret" "dms_instance" {
 
   data = {
     replication_instance_arn = module.test_dms.replication_instance_arn
-    access_key_id            = module.test_dms.access_key_id
-    secret_access_key        = module.test_dms.secret_access_key
     source                   = aws_dms_endpoint.source.endpoint_arn
     destination              = aws_dms_endpoint.target.endpoint_arn
     task                     = aws_dms_replication_task.replication_task.replication_task_arn
