@@ -1,5 +1,6 @@
 module "test_dms" {
-  source = "../"
+  source = "../" # use the latest release
+  # source = "https://github.com/ministryofjustice/cloud-platform-terraform-dms?ref=<latest-version>" # use the latest release
 
   vpc_name               = var.vpc_name
   namespace              = var.namespace
