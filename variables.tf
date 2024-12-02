@@ -55,3 +55,9 @@ variable "infrastructure_support" {
   description = "The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>)"
   type        = string
 }
+
+variable "engine_version" {
+  description = "The version of the engine to use"
+  default     = "3.5.2"
+  type        = string
+}
