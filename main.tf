@@ -52,7 +52,7 @@ resource "aws_dms_replication_instance" "replication-instance" {
   allocated_storage           = var.allocated_storage
   apply_immediately           = true
   auto_minor_version_upgrade  = false
-  engine_version              = "3.4.7"
+  engine_version              = var.engine_version
   publicly_accessible         = false
   replication_instance_class  = var.instance_type
   replication_instance_id     = "${var.team_name}-dms-${random_id.id.hex}"

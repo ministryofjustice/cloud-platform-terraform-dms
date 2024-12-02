@@ -166,6 +166,7 @@ No modules.
 | <a name="input_allocated_storage"></a> [allocated\_storage](#input\_allocated\_storage) | how many GB for local buffer | `number` | `32` | no |
 | <a name="input_application"></a> [application](#input\_application) | Application name | `string` | n/a | yes |
 | <a name="input_business_unit"></a> [business\_unit](#input\_business\_unit) | Area of the MOJ responsible for the service | `string` | n/a | yes |
+| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | The version of the engine to use | `string` | `"3.5.2"` | no |
 | <a name="input_environment_name"></a> [environment\_name](#input\_environment\_name) | Environment name | `string` | n/a | yes |
 | <a name="input_infrastructure_support"></a> [infrastructure\_support](#input\_infrastructure\_support) | The team responsible for managing the infrastructure. Should be of the form <team-name> (<team-email>) | `string` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | replication instance size, e.g dms.t2.medium | `string` | `"dms.t2.medium"` | no |
