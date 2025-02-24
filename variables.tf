@@ -7,8 +7,8 @@ variable "vpc_name" {
 }
 
 variable "instance_type" {
-  description = "replication instance size, e.g dms.t2.medium"
-  default     = "dms.t2.medium"
+  description = "replication instance size, e.g dms.t3.medium"
+  default     = "dms.t3.medium"
   type        = string
 }
 
@@ -58,6 +58,6 @@ variable "infrastructure_support" {
 
 variable "engine_version" {
   description = "The version of the engine to use"
-  default     = "3.5.2"
+  default     = "3.5.4"
   type        = string
 }
