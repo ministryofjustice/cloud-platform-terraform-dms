@@ -58,6 +58,6 @@ variable "infrastructure_support" {
 
 variable "engine_version" {
   description = "The version of the engine to use"
-  default     = "3.5.2"
+  default     = "3.5.4"
   type        = string
 }
