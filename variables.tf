@@ -7,8 +7,8 @@ variable "vpc_name" {
 }
 
 variable "instance_type" {
-  description = "replication instance size, e.g dms.t2.medium"
-  default     = "dms.t2.medium"
+  description = "replication instance size, e.g dms.t3.medium"
+  default     = "dms.t3.medium"
   type        = string
 }
 
